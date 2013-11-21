@@ -57,3 +57,26 @@ class Base:
     if host in hosts: hosts.remove(host)
 
     self.writeHosts(filename, hosts)
+
+  def cleanHostsFile(self):
+    os.unlink('/home/' + self._getUsername() + '/.ssh/known_hosts')
+
+  def runCommand(self, command):
+    if isinstance(command, list):
+      subprocess.call(command)
+
+  def runAgentCommand(self, command):
+    if isinstance(command, list):
+      sudo = ['sudo', '-u', self._getUsername()]
+      command = sudo + command
+
+      self.runCommand(command)
+
+  def runSSHCommand(self, host, command):
+    if isinstance(command, list):
+      self.cleanHostsFile()
+
+      ssh = ['ssh', '-oStrictHostKeyChecking=no', '-oUserKnownHostsFile=/dev/null', '-t', host, 'sudo']
+      command = ssh + command
+
+      self.runAgentCommand(command)

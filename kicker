@@ -21,6 +21,7 @@ import sys
 import os
 
 import base
+import deploy
 
 class Main:
   def __init__(self):
@@ -28,6 +29,9 @@ class Main:
     hostsDir = scriptDir + "/hosts/"
 
     self._base = base.Base(hostsDir)
+
+    self._modules = []
+    self._modules.append(deploy.Deploy(self._base))
 
   def run(self, argv):
     retVal = False
@@ -55,6 +59,11 @@ class Main:
 
         retVal = True
 
+      if not retVal:
+        for module in self._modules:
+          if method == module.getMethodName() and argc > 1:
+            retVal = module.run(argv[1:])
+
       return retVal
 
   def printHelp(self, appname):
@@ -62,6 +71,9 @@ class Main:
     print "\t" + appname + " add <filename> <hostname> [<hostname> ...]"
     print "\t" + appname + " remove <filename> <hostname> [<hostname> ...]"
     print "\t" + appname + " list <filename>"
+    
+    for module in self._modules:
+      module.printHelp(appname)
 
 if __name__ == "__main__":
   main = Main()

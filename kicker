@@ -1,0 +1,70 @@
+#!/usr/bin/python
+#
+# Copyright (C) 2013 Matt Davis
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+
+import sys
+import os
+
+import base
+
+class Main:
+  def __init__(self):
+    scriptDir = os.path.dirname(os.path.realpath(__file__))
+    hostsDir = scriptDir + "/hosts/"
+
+    self._base = base.Base(hostsDir)
+
+  def run(self, argv):
+    retVal = False
+    argc = len(argv)
+
+    if argc > 0:
+      method = argv[0]
+
+      if method == "add" and argc > 2:
+        for host in argv[2:]:
+          self._base.addHost(argv[1], host)
+
+        retVal = True
+      elif method == "remove" and argc > 2:
+        for host in argv[2:]:
+          self._base.remHost(argv[1], host)
+
+        retVal = True
+      elif method == "list" and argc > 1:
+        hosts = self._base.readHosts(argv[1])
+
+        print "File '" + argv[1] + "' contains the following hosts;"
+        for host in hosts:
+          print " '" + host + "'"
+
+        retVal = True
+
+      return retVal
+
+  def printHelp(self, appname):
+    print "Usage is as follows;"
+    print "\t" + appname + " add <filename> <hostname> [<hostname> ...]"
+    print "\t" + appname + " remove <filename> <hostname> [<hostname> ...]"
+    print "\t" + appname + " list <filename>"
+
+if __name__ == "__main__":
+  main = Main()
+
+  if not main.run(sys.argv[1:]):
+    main.printHelp(sys.argv[0])

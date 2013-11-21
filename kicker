@@ -21,7 +21,7 @@ import sys
 import os
 
 import base
-import deploy
+import deploy, kick
 
 class Main:
   def __init__(self):
@@ -32,6 +32,7 @@ class Main:
 
     self._modules = []
     self._modules.append(deploy.Deploy(self._base))
+    self._modules.append(kick.Kick(self._base))
 
   def run(self, argv):
     retVal = False

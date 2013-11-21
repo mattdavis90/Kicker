@@ -1,12 +1,18 @@
+import ConfigParser
 import os
 import subprocess
 
 class Base:
-  def __init__(self, hostsDir):
-    self._hostsDir = hostsDir
+  def __init__(self):
+    config = ConfigParser.ConfigParser()
+
+    config.read('settings.conf')
+
+    self._user = config.get('Settings', 'puppetUser')
+    self._hostsDir = config.get('Settings', 'hostsDir')
 
   def _getUsername(self):
-    return 'puppetagent'
+    return self._user
 
   def _getFile(self, filename, trunc):
     filename = self._hostsDir + filename

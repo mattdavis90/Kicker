@@ -25,10 +25,7 @@ import deploy, kick
 
 class Main:
   def __init__(self):
-    scriptDir = os.path.dirname(os.path.realpath(__file__))
-    hostsDir = scriptDir + "/hosts/"
-
-    self._base = base.Base(hostsDir)
+    self._base = base.Base()
 
     self._modules = []
     self._modules.append(deploy.Deploy(self._base))

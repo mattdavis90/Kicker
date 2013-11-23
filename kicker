@@ -62,7 +62,7 @@ class Main:
           if method == module.getMethodName() and argc > 1:
             retVal = module.run(argv[1:])
 
-      return retVal
+    return retVal
 
   def printHelp(self, appname):
     print "Usage is as follows;"
@@ -74,7 +74,12 @@ class Main:
       module.printHelp(appname)
 
 if __name__ == "__main__":
-  main = Main()
+  showHelp = True
 
-  if not main.run(sys.argv[1:]):
-    main.printHelp(sys.argv[0])
+  try:
+    main = Main()
+
+    if not main.run(sys.argv[1:]):
+      main.printHelp(sys.argv[0])
+  except:
+    print "Settings file was not found. A template is available as example.conf"
